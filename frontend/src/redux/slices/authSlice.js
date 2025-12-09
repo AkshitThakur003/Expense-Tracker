@@ -21,6 +21,12 @@ export const signup = createAsyncThunk(
       localStorage.setItem('refreshToken', refreshToken)
       return { token, refreshToken, user }
     } catch (error) {
+      // Handle rate limiting specifically
+      if (error.response?.status === 429) {
+        const message = error.response?.data?.message || 
+          'Too many signup attempts. Please wait 15 minutes before trying again.'
+        return rejectWithValue(message)
+      }
       return rejectWithValue(
         error.response?.data?.message || 'Signup failed'
       )
@@ -38,6 +44,12 @@ export const login = createAsyncThunk(
       localStorage.setItem('refreshToken', refreshToken)
       return { token, refreshToken, user }
     } catch (error) {
+      // Handle rate limiting specifically
+      if (error.response?.status === 429) {
+        const message = error.response?.data?.message || 
+          'Too many login attempts. Please wait 15 minutes before trying again.'
+        return rejectWithValue(message)
+      }
       return rejectWithValue(
         error.response?.data?.message || 'Login failed'
       )
@@ -121,6 +133,50 @@ export const checkAuth = createAsyncThunk(
         localStorage.removeItem('refreshToken')
         return rejectWithValue('Authentication failed')
       }
+    }
+  }
+)
+
+export const updateProfile = createAsyncThunk(
+  'auth/updateProfile',
+  async (profileData, { rejectWithValue }) => {
+    try {
+      const response = await axios.patch('/api/protected/user/profile', profileData)
+      return response.data.data.user
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || 'Failed to update profile'
+      )
+    }
+  }
+)
+
+export const changePassword = createAsyncThunk(
+  'auth/changePassword',
+  async (passwordData, { rejectWithValue }) => {
+    try {
+      await axios.patch('/api/protected/user/password', passwordData)
+      return true
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || 'Failed to change password'
+      )
+    }
+  }
+)
+
+export const updateCurrency = createAsyncThunk(
+  'auth/updateCurrency',
+  async (currency, { rejectWithValue, dispatch }) => {
+    try {
+      await axios.patch('/api/protected/user/currency', { currency })
+      // Refresh user data to get updated currency
+      await dispatch(getCurrentUser())
+      return currency
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || 'Failed to update currency'
+      )
     }
   }
 )
@@ -218,6 +274,49 @@ const authSlice = createSlice({
         state.isAuthenticated = false
         state.token = null
         state.refreshToken = null
+      })
+      // Update Profile
+      .addCase(updateProfile.pending, (state) => {
+        state.loading = true
+        state.error = null
+      })
+      .addCase(updateProfile.fulfilled, (state, action) => {
+        state.loading = false
+        state.user = action.payload
+        state.error = null
+      })
+      .addCase(updateProfile.rejected, (state, action) => {
+        state.loading = false
+        state.error = action.payload
+      })
+      // Change Password
+      .addCase(changePassword.pending, (state) => {
+        state.loading = true
+        state.error = null
+      })
+      .addCase(changePassword.fulfilled, (state) => {
+        state.loading = false
+        state.error = null
+      })
+      .addCase(changePassword.rejected, (state, action) => {
+        state.loading = false
+        state.error = action.payload
+      })
+      // Update Currency
+      .addCase(updateCurrency.pending, (state) => {
+        state.loading = true
+        state.error = null
+      })
+      .addCase(updateCurrency.fulfilled, (state, action) => {
+        state.loading = false
+        if (state.user) {
+          state.user.currency = action.payload
+        }
+        state.error = null
+      })
+      .addCase(updateCurrency.rejected, (state, action) => {
+        state.loading = false
+        state.error = action.payload
       })
   },
 })

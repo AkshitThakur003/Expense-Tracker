@@ -1,0 +1,29 @@
+Title,Amount,Type,Category,Date,Recurring,Note
+Healthcare Doctor Consultation Dec 2025,2500.00,expense,Healthcare,2025-12-05,No,General checkup and consultation for budget test
+Food & Dining Grocery Shopping Dec Week 1,3500.00,expense,Food & Dining,2025-12-10,No,Weekly groceries for family - budget test
+Healthcare Pharmacy Purchase Dec,1800.00,expense,Healthcare,2025-12-12,No,Prescription medicines and vitamins - budget test
+Food & Dining Restaurant Anniversary Dinner,2200.00,expense,Food & Dining,2025-12-15,No,Anniversary dinner celebration - budget test
+Healthcare Lab Tests December,3200.00,expense,Healthcare,2025-12-18,No,Blood tests and health screening - budget test
+Food & Dining Coffee Shop Dec 20,450.00,expense,Food & Dining,2025-12-20,No,Multiple coffee breaks during work - budget test
+Food & Dining Business Lunch Dec,850.00,expense,Food & Dining,2025-12-22,No,Business lunch with client - budget test
+Healthcare Dental Cleaning Dec 2025,1500.00,expense,Healthcare,2025-12-23,No,Regular dental cleaning and checkup - budget test
+Food & Dining New Year Eve Dinner,1500.00,expense,Food & Dining,2025-12-31,No,New Year celebration dinner - budget test
+Healthcare Medicine Refill Dec End,700.00,expense,Healthcare,2025-12-28,No,Monthly prescription refill - budget test
+Food & Dining Grocery Shopping Jan 2026 Week 1,2800.00,expense,Food & Dining,2026-01-03,No,First week groceries for January - budget test
+Food & Dining Fast Food Jan 2026,650.00,expense,Food & Dining,2026-01-05,No,Quick lunch during work - budget test
+Healthcare Physio Session Jan 2026,2000.00,expense,Healthcare,2026-01-07,No,Physical therapy session - budget test
+Food & Dining Weekend Brunch Jan 8,1200.00,expense,Food & Dining,2026-01-08,No,Sunday brunch with family - budget test
+December Salary Credit,75000.00,income,Salary,2025-12-01,Yes,Monthly salary credit for December
+December Rent Payment,15000.00,expense,Bills & Utilities,2025-12-01,Yes,Apartment rent payment December
+December Electricity Bill,3200.00,expense,Bills & Utilities,2025-12-05,Yes,Monthly electricity bill December
+December Phone Bill,599.00,expense,Bills & Utilities,2025-12-08,Yes,Monthly mobile plan December
+December Netflix Subscription,999.00,expense,Entertainment,2025-12-15,Yes,Monthly subscription renewal December
+December Petrol Fill,2500.00,expense,Transportation,2025-12-10,No,Full tank refill December
+December Uber Ride,380.00,expense,Transportation,2025-12-18,No,City commute December
+December Amazon Purchase,4500.00,expense,Shopping,2025-12-12,No,Electronics and household items December
+December Movie Tickets,800.00,expense,Entertainment,2025-12-20,No,Weekend movie December
+December Gas Cylinder,1500.00,expense,Bills & Utilities,2025-12-25,Yes,Monthly cooking gas cylinder December
+December Online Course,5000.00,expense,Education,2025-12-15,No,Professional development course December
+December Investment SIP,10000.00,expense,Investment,2025-12-20,Yes,Monthly mutual fund investment December
+December Freelance Project Payment,25000.00,income,Freelance,2025-12-10,No,Web development project completed December
+

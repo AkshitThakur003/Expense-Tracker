@@ -1,0 +1,29 @@
+Title,Amount,Type,Category,Date,Recurring,Note
+Doctor Visit,2500.00,expense,Healthcare,2025-12-05,No,General checkup and consultation
+Grocery Shopping,3500.00,expense,Food & Dining,2025-12-10,No,Weekly groceries for family
+Pharmacy Medicines,1800.00,expense,Healthcare,2025-12-12,No,Prescription medicines and vitamins
+Restaurant Dinner,2200.00,expense,Food & Dining,2025-12-15,No,Anniversary dinner celebration
+Lab Tests,3200.00,expense,Healthcare,2025-12-18,No,Blood tests and health screening
+Coffee Shop,450.00,expense,Food & Dining,2025-12-20,No,Multiple coffee breaks during work
+Lunch Meeting,850.00,expense,Food & Dining,2025-12-22,No,Business lunch with client
+Dental Checkup,1500.00,expense,Healthcare,2025-12-23,No,Regular dental cleaning and checkup
+New Year Party,1500.00,expense,Food & Dining,2025-12-31,No,New Year celebration dinner
+Medicine Refill,700.00,expense,Healthcare,2025-12-28,No,Monthly prescription refill
+Grocery Shopping January,2800.00,expense,Food & Dining,2026-01-03,No,First week groceries for January
+Fast Food Lunch,650.00,expense,Food & Dining,2026-01-05,No,Quick lunch during work
+Physiotherapy Session,2000.00,expense,Healthcare,2026-01-07,No,Physical therapy session
+Weekend Brunch,1200.00,expense,Food & Dining,2026-01-08,No,Sunday brunch with family
+Salary Deposit,75000.00,income,Salary,2025-12-01,Yes,Monthly salary credit
+Monthly Rent,15000.00,expense,Bills & Utilities,2025-12-01,Yes,Apartment rent payment
+Electricity Bill,3200.00,expense,Bills & Utilities,2025-12-05,Yes,Monthly electricity bill
+Phone Bill,599.00,expense,Bills & Utilities,2025-12-08,Yes,Monthly mobile plan
+Netflix Subscription,999.00,expense,Entertainment,2025-12-15,Yes,Monthly subscription renewal
+Petrol Fill,2500.00,expense,Transportation,2025-12-10,No,Full tank refill
+Uber Ride,380.00,expense,Transportation,2025-12-18,No,City commute
+Amazon Purchase,4500.00,expense,Shopping,2025-12-12,No,Electronics and household items
+Movie Tickets,800.00,expense,Entertainment,2025-12-20,No,Weekend movie
+Gas Bill,1500.00,expense,Bills & Utilities,2025-12-25,Yes,Monthly cooking gas cylinder
+Online Course,5000.00,expense,Education,2025-12-15,No,Professional development course
+Investment SIP,10000.00,expense,Investment,2025-12-20,Yes,Monthly mutual fund investment
+Freelance Project,25000.00,income,Freelance,2025-12-10,No,Web development project completed
+

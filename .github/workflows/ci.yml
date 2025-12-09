@@ -1,0 +1,89 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  backend-tests:
+    runs-on: ubuntu-latest
+    
+    services:
+      mongodb:
+        image: mongo:latest
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd "mongosh --eval 'db.adminCommand(\"ping\")'"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: backend/package-lock.json
+      
+      - name: Install backend dependencies
+        working-directory: ./backend
+        run: npm ci
+      
+      - name: Run backend tests
+        working-directory: ./backend
+        run: npm test
+        env:
+          MONGODB_URI: mongodb://localhost:27017/test-expense-tracker
+          JWT_SECRET: test-secret-key-for-ci
+          JWT_REFRESH_SECRET: test-refresh-secret-key-for-ci
+      
+      - name: Run backend linter
+        working-directory: ./backend
+        run: |
+          npm install -g eslint || true
+          eslint . --ext .js || true
+
+  frontend-tests:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+      
+      - name: Install frontend dependencies
+        working-directory: ./frontend
+        run: npm ci
+      
+      - name: Build frontend
+        working-directory: ./frontend
+        run: npm run build
+      
+      - name: Run frontend linter
+        working-directory: ./frontend
+        run: |
+          npm install -g eslint || true
+          eslint . --ext .js,.jsx || true
+
+  security-scan:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Run npm audit
+        run: |
+          cd backend && npm audit --audit-level=moderate || true
+          cd ../frontend && npm audit --audit-level=moderate || true
+

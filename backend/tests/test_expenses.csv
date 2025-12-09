@@ -1,0 +1,65 @@
+Title,Amount,Type,Category,Date,Recurring,Note
+Grocery Shopping,1250.50,expense,Food & Dining,2024-01-15,No,Weekly groceries from supermarket
+Monthly Rent,15000.00,expense,Bills & Utilities,2024-01-01,Yes,Apartment rent payment
+Salary Deposit,75000.00,income,Salary,2024-01-01,Yes,Monthly salary credit
+Uber Ride,350.00,expense,Transportation,2024-01-02,No,Airport pickup
+Movie Tickets,800.00,expense,Entertainment,2024-01-03,No,Weekend movie with friends
+Electricity Bill,2800.00,expense,Bills & Utilities,2024-01-05,Yes,Monthly electricity bill
+Restaurant Dinner,2200.00,expense,Food & Dining,2024-01-06,No,Birthday celebration dinner
+Coffee Shop,150.00,expense,Food & Dining,2024-01-07,No,Morning coffee
+Medical Checkup,3500.00,expense,Healthcare,2024-01-08,No,Annual health checkup
+Online Course,5000.00,expense,Education,2024-01-10,No,React development course
+Amazon Purchase,4500.00,expense,Shopping,2024-01-12,No,Electronics and books
+Freelance Project,25000.00,income,Freelance,2024-01-14,No,Web development project completed
+Petrol Fill,2000.00,expense,Transportation,2024-01-15,No,Full tank refill
+Netflix Subscription,999.00,expense,Entertainment,2024-01-15,Yes,Monthly subscription renewal
+Gym Membership,3000.00,expense,Healthcare,2024-01-15,Yes,Monthly gym fee
+Phone Bill,599.00,expense,Bills & Utilities,2024-01-16,Yes,Monthly mobile plan
+Restaurant Lunch,850.00,expense,Food & Dining,2024-01-17,No,Client meeting lunch
+Flight Ticket,12000.00,expense,Travel,2024-01-18,No,Mumbai to Delhi round trip
+Hotel Booking,8500.00,expense,Travel,2024-01-18,No,3 nights hotel stay
+Investment SIP,10000.00,expense,Investment,2024-01-20,Yes,Monthly mutual fund investment
+Taxi Ride,450.00,expense,Transportation,2024-01-21,No,City center commute
+Book Purchase,1200.00,expense,Shopping,2024-01-22,No,Technical books from bookstore
+Gas Bill,1500.00,expense,Bills & Utilities,2024-01-25,Yes,Monthly cooking gas cylinder
+Pharmacy,850.00,expense,Healthcare,2024-01-26,No,Prescription medicines
+Freelance Writing,8000.00,income,Freelance,2024-01-28,No,Article writing project
+Concert Tickets,3500.00,expense,Entertainment,2024-01-30,No,Music concert tickets
+Grocery Shopping,1380.00,expense,Food & Dining,2024-02-01,No,Monthly groceries restock
+Salary Deposit,75000.00,income,Salary,2024-02-01,Yes,Monthly salary credit
+Monthly Rent,15000.00,expense,Bills & Utilities,2024-02-01,Yes,Apartment rent payment
+Electricity Bill,3200.00,expense,Bills & Utilities,2024-02-05,Yes,Monthly electricity bill - higher usage
+Restaurant Dinner,1850.00,expense,Food & Dining,2024-02-08,No,Anniversary dinner
+Online Shopping,5600.00,expense,Shopping,2024-02-10,No,Clothing and accessories
+Freelance Design,15000.00,income,Freelance,2024-02-12,No,Logo design project
+Car Insurance,12000.00,expense,Other,2024-02-15,No,Annual car insurance premium
+Petrol Fill,2100.00,expense,Transportation,2024-02-18,No,Full tank refill
+Movie Tickets,600.00,expense,Entertainment,2024-02-20,No,Weekend movie
+Netflix Subscription,999.00,expense,Entertainment,2024-02-15,Yes,Monthly subscription renewal
+Gym Membership,3000.00,expense,Healthcare,2024-02-15,Yes,Monthly gym fee
+Phone Bill,599.00,expense,Bills & Utilities,2024-02-16,Yes,Monthly mobile plan
+Investment SIP,10000.00,expense,Investment,2024-02-20,Yes,Monthly mutual fund investment
+Gas Bill,1500.00,expense,Bills & Utilities,2024-02-25,Yes,Monthly cooking gas cylinder
+Restaurant Lunch,1200.00,expense,Food & Dining,2024-02-22,No,Team lunch
+Coffee Shop,200.00,expense,Food & Dining,2024-02-25,No,Multiple coffee breaks
+Taxi Ride,380.00,expense,Transportation,2024-02-28,No,Airport drop
+Grocery Shopping,1420.00,expense,Food & Dining,2024-03-01,No,Weekly groceries
+Salary Deposit,75000.00,income,Salary,2024-03-01,Yes,Monthly salary credit
+Monthly Rent,15000.00,expense,Bills & Utilities,2024-03-01,Yes,Apartment rent payment
+Online Course,3500.00,expense,Education,2024-03-05,No,JavaScript advanced course
+Restaurant Dinner,2400.00,expense,Food & Dining,2024-03-08,No,Friends gathering
+Electricity Bill,2900.00,expense,Bills & Utilities,2024-03-05,Yes,Monthly electricity bill
+Medical Consultation,2500.00,expense,Healthcare,2024-03-10,No,Doctor appointment
+Amazon Purchase,3200.00,expense,Shopping,2024-03-12,No,Home essentials
+Freelance Development,30000.00,income,Freelance,2024-03-15,No,Full-stack project completion
+Uber Ride,280.00,expense,Transportation,2024-03-16,No,City commute
+Concert Tickets,4500.00,expense,Entertainment,2024-03-18,No,Comedy show tickets
+Netflix Subscription,999.00,expense,Entertainment,2024-03-15,Yes,Monthly subscription renewal
+Gym Membership,3000.00,expense,Healthcare,2024-03-15,Yes,Monthly gym fee
+Phone Bill,599.00,expense,Bills & Utilities,2024-03-16,Yes,Monthly mobile plan
+Investment SIP,10000.00,expense,Investment,2024-03-20,Yes,Monthly mutual fund investment
+Gas Bill,1500.00,expense,Bills & Utilities,2024-03-25,Yes,Monthly cooking gas cylinder
+Book Purchase,1800.00,expense,Shopping,2024-03-22,No,Programming books
+Coffee Shop,175.00,expense,Food & Dining,2024-03-25,No,Morning coffee
+Petrol Fill,1950.00,expense,Transportation,2024-03-28,No,Full tank refill
+

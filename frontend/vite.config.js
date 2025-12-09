@@ -19,5 +19,18 @@ export default defineConfig({
       },
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+          'redux-vendor': ['@reduxjs/toolkit', 'react-redux'],
+          'chart-vendor': ['recharts'],
+        },
+      },
+    },
+  },
+  // PWA support - copy manifest and service worker to dist
+  publicDir: 'public',
 })
 

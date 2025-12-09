@@ -28,6 +28,11 @@ const userSchema = new mongoose.Schema({
     type: String,
     select: false,
   },
+  currency: {
+    type: String,
+    default: 'INR',
+    enum: ['INR', 'USD', 'EUR', 'GBP', 'JPY', 'AUD', 'CAD', 'CHF', 'CNY'],
+  },
 }, {
   timestamps: true,
 });

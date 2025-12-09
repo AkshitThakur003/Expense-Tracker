@@ -1,22 +1,62 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { logout } from '../redux/slices/authSlice'
 import toast from 'react-hot-toast'
+import { motion, AnimatePresence } from 'framer-motion'
+import { 
+  FiHome, 
+  FiDollarSign, 
+  FiPieChart, 
+  FiTarget, 
+  FiBarChart2, 
+  FiUser, 
+  FiLogOut,
+  FiX
+} from 'react-icons/fi'
 
 const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
   const location = useLocation()
   const navigate = useNavigate()
   const dispatch = useDispatch()
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 1024)
+  const [hasAnimated, setHasAnimated] = useState(false)
 
+  // Handle window resize
   useEffect(() => {
-    // Close sidebar on outside click for mobile
+    const handleResize = () => {
+      const mobile = window.innerWidth < 1024
+      setIsMobile(mobile)
+      
+      // On desktop, sidebar should always be visible
+      if (!mobile) {
+        setSidebarOpen(false) // Reset state, but sidebar will show via CSS
+      } else {
+        // On mobile, close sidebar if it was open
+        setSidebarOpen(false)
+      }
+    }
+
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [setSidebarOpen])
+
+  // Close sidebar on route change (mobile only)
+  useEffect(() => {
+    if (isMobile) {
+      setSidebarOpen(false)
+    }
+  }, [location.pathname, isMobile, setSidebarOpen])
+
+  // Handle click outside (mobile only)
+  useEffect(() => {
+    if (!isMobile || !sidebarOpen) return
+
     const handleClickOutside = (e) => {
       if (
-        sidebarOpen &&
-        window.innerWidth < 1024 &&
         !e.target.closest('.sidebar') &&
-        !e.target.closest('button[aria-label="Open sidebar"]')
+        !e.target.closest('button[aria-label="Open sidebar"]') &&
+        !e.target.closest('[data-sidebar-toggle]')
       ) {
         setSidebarOpen(false)
       }
@@ -26,23 +66,22 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
     return () => {
       document.removeEventListener('mousedown', handleClickOutside)
     }
-  }, [sidebarOpen, setSidebarOpen])
+  }, [sidebarOpen, isMobile, setSidebarOpen])
 
-  // Close sidebar on route change for mobile
+  // Mark as animated after first render
   useEffect(() => {
-    if (window.innerWidth < 1024) {
-      setSidebarOpen(false)
+    if (!hasAnimated) {
+      setHasAnimated(true)
     }
-  }, [location.pathname, setSidebarOpen])
+  }, [hasAnimated])
 
   const handleLogout = async () => {
     try {
       await dispatch(logout()).unwrap()
       toast.success('Logged out successfully')
-      navigate('/login')
-      if (window.innerWidth < 1024) {
-        setSidebarOpen(false)
-      }
+      setTimeout(() => {
+        navigate('/login')
+      }, 300)
     } catch (error) {
       toast.error('Logout failed')
     }
@@ -50,115 +89,158 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
 
   const menuItems = [
     {
-      name: 'Dashboard',
-      href: '/dashboard',
-      icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6',
+      name: 'Insights',
+      href: '/insights',
+      icon: FiHome,
+      action: null,
+    },
+    {
+      name: 'Expenses',
+      href: '/expenses',
+      icon: FiDollarSign,
+      action: null,
+    },
+    {
+      name: 'Budgets',
+      href: '/budgets',
+      icon: FiPieChart,
+      action: null,
+    },
+    {
+      name: 'Goals',
+      href: '/goals',
+      icon: FiTarget,
+      action: null,
+    },
+    {
+      name: 'Reports',
+      href: '/reports',
+      icon: FiBarChart2,
+      action: null,
+    },
+    {
+      name: 'Currency Converter',
+      href: '/currency',
+      icon: FiDollarSign,
       action: null,
     },
     {
       name: 'Profile',
       href: '/profile',
-      icon: 'M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z',
+      icon: FiUser,
       action: null,
     },
-    {
-      name: 'Logout',
-      href: '#',
-      icon: 'M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1',
-      action: handleLogout,
-    },
   ]
+
+  // Determine if sidebar should be visible
+  const shouldShow = !isMobile || sidebarOpen
 
   return (
     <>
       {/* Mobile backdrop */}
-      {sidebarOpen && (
-        <div
-          className="fixed inset-0 bg-gray-600 bg-opacity-75 z-40 lg:hidden"
-          onClick={() => setSidebarOpen(false)}
-        />
-      )}
+      <AnimatePresence>
+        {isMobile && sidebarOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-40 lg:hidden"
+            onClick={() => setSidebarOpen(false)}
+          />
+        )}
+      </AnimatePresence>
 
       {/* Sidebar */}
-      <aside
-        className={`sidebar fixed top-16 left-0 z-40 h-[calc(100vh-4rem)] w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 transform ${
-          sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-        } lg:translate-x-0 transition-transform duration-200 ease-in-out`}
+      <motion.aside
+        initial={false}
+        animate={{
+          x: isMobile ? (sidebarOpen ? 0 : -256) : 0,
+        }}
+        transition={{
+          type: 'spring',
+          stiffness: 300,
+          damping: 30,
+        }}
+        className={`sidebar fixed top-16 left-0 z-40 h-[calc(100vh-4rem)] w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 shadow-xl ${
+          !isMobile ? 'translate-x-0' : ''
+        }`}
       >
         <div className="h-full px-3 py-4 overflow-y-auto">
-          <ul className="space-y-2">
-            {menuItems.map((item) => {
-              const isActive = item.action === null && location.pathname === item.href
-              const baseClasses = `flex items-center p-2.5 text-base font-normal rounded-lg transition-colors duration-200`
-              const activeClasses = isActive
-                ? 'bg-indigo-600 text-white dark:bg-indigo-500 shadow-md'
-                : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
-              
-              const iconClasses = isActive
-                ? 'text-white dark:text-white'
-                : 'text-gray-500 dark:text-gray-400'
+          {/* Close button for mobile */}
+          {isMobile && (
+            <div className="flex justify-end mb-4">
+              <motion.button
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                onClick={() => setSidebarOpen(false)}
+                className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 dark:text-gray-400 transition-colors"
+                aria-label="Close sidebar"
+              >
+                <FiX className="icon-md" aria-hidden="true" />
+              </motion.button>
+            </div>
+          )}
 
-              if (item.action) {
-                return (
-                  <li key={item.name}>
-                    <button
-                      onClick={item.action}
-                      className={`${baseClasses} ${activeClasses} w-full text-left`}
-                    >
-                      <svg
-                        className={`w-6 h-6 ${iconClasses} transition-colors duration-200`}
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d={item.icon}
-                        />
-                      </svg>
-                      <span className="ml-3">{item.name}</span>
-                    </button>
-                  </li>
-                )
-              }
+          <ul className="space-y-1">
+            {menuItems.map((item, index) => {
+              const isActive = location.pathname === item.href
+              const Icon = item.icon
 
               return (
                 <li key={item.name}>
                   <Link
                     to={item.href}
                     onClick={() => {
-                      if (window.innerWidth < 1024) {
+                      if (isMobile) {
                         setSidebarOpen(false)
                       }
                     }}
-                    className={`${baseClasses} ${activeClasses}`}
+                    className={`flex items-center p-3 text-base font-medium rounded-lg transition-all duration-200 relative ${
+                      isActive
+                        ? 'bg-primary text-white dark:bg-primary-600 shadow-md'
+                        : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                    }`}
                   >
-                    <svg
-                      className={`w-6 h-6 ${iconClasses} transition-colors duration-200`}
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d={item.icon}
-                      />
-                    </svg>
+                    <Icon
+                      className={`icon-md ${
+                        isActive
+                          ? 'text-white'
+                          : 'text-gray-500 dark:text-gray-400'
+                      }`}
+                      aria-hidden="true"
+                    />
                     <span className="ml-3">{item.name}</span>
+                    {isActive && (
+                      <motion.div
+                        layoutId="activeIndicator"
+                        className="absolute left-0 w-1 h-8 bg-white rounded-r-full"
+                        initial={false}
+                        transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+                      />
+                    )}
                   </Link>
                 </li>
               )
             })}
+
+            {/* Logout button */}
+            <li className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={handleLogout}
+                className="flex items-center w-full p-3 text-base font-medium rounded-lg text-danger hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors duration-200"
+              >
+                <FiLogOut className="icon-md" aria-hidden="true" />
+                <span className="ml-3">Logout</span>
+              </motion.button>
+            </li>
           </ul>
         </div>
-      </aside>
+      </motion.aside>
     </>
   )
 }
 
 export default Sidebar
-

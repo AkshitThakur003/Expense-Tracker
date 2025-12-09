@@ -3,11 +3,28 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const path = require('path');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
+const mongoSanitize = require('express-mongo-sanitize');
+const logger = require('./utils/logger');
 
 // Load .env file from backend directory regardless of where server.js is called from
 dotenv.config({ path: path.join(__dirname, '.env') });
 
 const app = express();
+
+// Security middleware - Helmet
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      scriptSrc: ["'self'"],
+      imgSrc: ["'self'", "data:", "https:"],
+    },
+  },
+  crossOriginEmbedderPolicy: false,
+}));
 
 // CORS configuration
 const corsOptions = {
@@ -18,13 +35,73 @@ const corsOptions = {
 
 // Middleware
 app.use(cors(corsOptions));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+
+// Body parser with size limits
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+// Data sanitization against NoSQL injection attacks
+app.use(mongoSanitize());
+
+// Rate limiting configuration
+const isDevelopment = process.env.NODE_ENV === 'development';
+const disableRateLimit = process.env.DISABLE_RATE_LIMIT === 'true' || isDevelopment;
+
+// General API rate limiter
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limit each IP to 100 requests per windowMs
+  message: 'Too many requests from this IP, please try again later.',
+  standardHeaders: true,
+  legacyHeaders: false,
+  skip: () => disableRateLimit, // Skip rate limiting if disabled
+});
+
+// Stricter rate limiting for auth routes
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: parseInt(process.env.AUTH_RATE_LIMIT_MAX || '15', 10), // Limit each IP to 15 requests per windowMs (configurable)
+  message: {
+    success: false,
+    message: 'Too many authentication attempts from this IP. Please try again after 15 minutes.',
+    error: 'RATE_LIMIT_EXCEEDED'
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+  skipSuccessfulRequests: false, // Count all requests, not just failed ones
+  skip: () => disableRateLimit, // Skip rate limiting if disabled
+});
+
+// Apply rate limiting middleware
+app.use('/api/', limiter);
+app.use('/api/auth/', authLimiter);
+
+// Log rate limiting status
+if (disableRateLimit) {
+  console.log('⚠️  Rate limiting DISABLED (Development mode or DISABLE_RATE_LIMIT=true)');
+} else {
+  console.log('✅ Rate limiting ENABLED');
+}
+
+// Swagger Documentation
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require('./config/swagger');
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Routes
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/protected', require('./routes/protected'));
 app.use('/api/test', require('./routes/test'));
+app.use('/api/transactions', require('./routes/transactions'));
+app.use('/api/budgets', require('./routes/budgets'));
+app.use('/api/export', require('./routes/export'));
+app.use('/api/tags', require('./routes/tags'));
+app.use('/api/goals', require('./routes/goals'));
+app.use('/api/reports', require('./routes/reports'));
+app.use('/api/notifications', require('./routes/notifications'));
+app.use('/api/currency', require('./routes/currency'));
+app.use('/api/backup', require('./routes/backup'));
+app.use('/api/analytics', require('./routes/analytics'));
 
 // MongoDB Connection
 const connectDB = async () => {
@@ -104,9 +181,23 @@ mongoose.connection.on('error', (err) => {
 
 connectDB();
 
+// Start recurring transactions scheduler
+const { startRecurringTransactionScheduler } = require('./services/recurringTransactions');
+startRecurringTransactionScheduler();
+
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+// Only start server if not in test environment and not in Vercel serverless
+// Vercel serverless functions don't need app.listen() - the handler is called directly
+const isVercel = process.env.VERCEL === '1';
+const isTest = process.env.NODE_ENV === 'test';
+
+if (!isTest && !isVercel) {
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+}
+
+// Export app for testing
+module.exports = app;
 

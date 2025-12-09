@@ -12,7 +12,12 @@
     "install-client": "cd frontend && npm install",
     "install-all": "npm install && cd backend && npm install && cd ../frontend && npm install"
   },
-  "keywords": ["mern", "boilerplate", "jwt", "auth"],
+  "keywords": [
+    "mern",
+    "boilerplate",
+    "jwt",
+    "auth"
+  ],
   "author": "",
   "license": "ISC",
   "devDependencies": {
@@ -20,4 +25,3 @@
     "nodemon": "^3.0.2"
   }
 }
-

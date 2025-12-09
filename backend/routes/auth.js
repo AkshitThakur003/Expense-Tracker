@@ -4,6 +4,7 @@ const User = require('../models/User');
 const { generateToken, generateRefreshToken } = require('../utils/generateToken');
 const { protect } = require('../middleware/auth');
 const { sendErrorResponse, handleMongoError } = require('../utils/errorHandler');
+const logger = require('../utils/logger');
 const jwt = require('jsonwebtoken');
 
 const router = express.Router();
@@ -14,11 +15,13 @@ const router = express.Router();
 router.post(
   '/signup',
   [
-    body('name').trim().notEmpty().withMessage('Name is required'),
-    body('email').isEmail().withMessage('Please include a valid email'),
+    body('name').trim().notEmpty().withMessage('Name is required').isLength({ max: 100 }).withMessage('Name must be less than 100 characters'),
+    body('email').isEmail().withMessage('Please include a valid email').normalizeEmail(),
     body('password')
-      .isLength({ min: 6 })
-      .withMessage('Password must be at least 6 characters'),
+      .isLength({ min: 8 })
+      .withMessage('Password must be at least 8 characters')
+      .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/)
+      .withMessage('Password must contain at least one uppercase letter, one lowercase letter, and one number'),
   ],
   async (req, res) => {
     const errors = validationResult(req);
@@ -64,13 +67,15 @@ router.post(
             id: user._id,
             name: user.name,
             email: user.email,
+            currency: user.currency,
+            createdAt: user.createdAt,
           },
           token,
           refreshToken,
         },
       });
     } catch (error) {
-      console.error('Signup error:', error);
+      logger.error('Signup error:', error);
 
       // Handle MongoDB duplicate key error
       const mongoError = handleMongoError(error);
@@ -142,13 +147,15 @@ router.post(
             id: user._id,
             name: user.name,
             email: user.email,
+            currency: user.currency,
+            createdAt: user.createdAt,
           },
           token,
           refreshToken,
         },
       });
     } catch (error) {
-      console.error('Login error:', error);
+      logger.error('Login error:', error);
       return sendErrorResponse(res, 500, 'Server error. Please try again later.');
     }
   }
@@ -189,7 +196,7 @@ router.post('/refresh', async (req, res) => {
       },
     });
   } catch (error) {
-    console.error('Refresh token error:', error);
+    logger.error('Refresh token error:', error);
     
     if (error.name === 'TokenExpiredError') {
       return sendErrorResponse(res, 401, 'Refresh token has expired');
@@ -221,13 +228,15 @@ router.get('/me', protect, async (req, res) => {
           id: user._id,
           name: user.name,
           email: user.email,
+          currency: user.currency,
+          createdAt: user.createdAt,
         },
       },
     });
-  } catch (error) {
-    console.error('Get user error:', error);
-    return sendErrorResponse(res, 500, 'Server error. Please try again later.');
-  }
+    } catch (error) {
+      logger.error('Get user error:', error);
+      return sendErrorResponse(res, 500, 'Server error. Please try again later.');
+    }
 });
 
 // @route   POST /api/auth/logout
@@ -245,10 +254,10 @@ router.post('/logout', protect, async (req, res) => {
       success: true,
       message: 'Logged out successfully',
     });
-  } catch (error) {
-    console.error('Logout error:', error);
-    return sendErrorResponse(res, 500, 'Server error. Please try again later.');
-  }
+    } catch (error) {
+      logger.error('Logout error:', error);
+      return sendErrorResponse(res, 500, 'Server error. Please try again later.');
+    }
 });
 
 module.exports = router;

@@ -1,3 +1,5 @@
+const logger = require('./logger');
+
 // Standardized error response helper
 const sendErrorResponse = (res, statusCode, message, errors = null) => {
   const response = {
@@ -7,6 +9,13 @@ const sendErrorResponse = (res, statusCode, message, errors = null) => {
 
   if (errors) {
     response.errors = errors;
+  }
+
+  // Log error for server-side debugging
+  if (statusCode >= 500) {
+    logger.error(`Error ${statusCode}: ${message}`, { errors });
+  } else if (statusCode >= 400) {
+    logger.warn(`Client error ${statusCode}: ${message}`, { errors });
   }
 
   return res.status(statusCode).json(response);
